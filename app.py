@@ -10,9 +10,6 @@ from googleapiclient.errors import HttpError
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/drive'] 
 
-# 
-DOCUMENT_ID = '1XGfAYJof_L0ZfDG3RicXzSD11tGtrkEO27jXkb30hMc'
-
 def authenticate():
     creds = None
 

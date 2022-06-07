@@ -8,16 +8,10 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-#SCOPES = ['https://www.googleapis.com/auth/drive']
-SCOPES = ['https://www.googleapis.com/auth/documents.readonly', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents'] 
+SCOPES = ['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/drive'] 
 
-
-KEY = 'IzaSyADiYXDXUk3FzdF68vHzH8NKZAyAptkbKc'
-
-# The ID of a sample document.
+# 
 DOCUMENT_ID = '1XGfAYJof_L0ZfDG3RicXzSD11tGtrkEO27jXkb30hMc'
-#DOCUMENT_ID = '1vMJ3Bt5w-A0i7Yz99RMwDPwLhUXpuw6kUgblS4XotnU' 
-
 
 def authenticate():
     creds = None
@@ -49,11 +43,23 @@ def authenticate():
         print(err)
 
 
-def getInfo():
-    print("Enter a new name for the Google Doc:", end="")
-    title = input() 
-    print("The title you entered is:", title)
-    return title
+def getDocInfo(ser):
+    print("Enter doc id:", end="")
+    docID = input()
+    document = ser.documents().get(documentId=docID).execute()
+    print('The title of the document is: {}'.format(document.get('title')))
+    print("\n****************\n")
+def getDocInfo(ser, dID):
+    document = ser.documents().get(documentId=dID).execute()
+    print('The title of the document is: {}'.format(document.get('title')))
+    print("\n****************\n")
+
+def establishDocID():
+    print("Enter doc id:")
+    docID = input()
+    print("\n****************\n")
+
+    return docID 
 
 def createDoc(d, t):
     title = t
@@ -63,8 +69,40 @@ def createDoc(d, t):
     d.documents().create(body=body).execute()
     print("Created document with title: {0}".format(doc.get('title')))
 
+def startMenu(s):
+    print("1)Establish a Document ID")
+    print("2)Get Document Info:")
+    print("3)Get Document info on different ID ")
+    print("9)Clear Document ID")
+    print("0)Exit Program") 
+    print("Please enter a menu item:")
+    global docID    
+    x = input()
+    x = int(x)
+    if x==1:
+        print("You have chosen: Establish a Document ID")
+        docID = establishDocID()
+        print("New doc ID:", docID)
+        startMenu(s)        
+    elif x==2:
+        print("You have chosen: Get Document Info")
+        getDocInfo(s, docID)
+        startMenu(s)
+    elif x==3:
+        print("You have chosen: Get Document info on different ID")
+        getDocInfo(s)
+        startMenu(s)
+    elif x==9:
+        print("You have chosen: Clear Document ID")
+        docID = ""
+        startMenu(s)
+    elif x==0:
+        print("Now exiting...")
+        return
 if __name__ == '__main__':
-    document  = authenticate()
+    docID = ""
+    service  = authenticate()
+    startMenu(service)
 #    title = getInfo()
 
 #    createDoc(document, title)    
